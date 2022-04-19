@@ -58,7 +58,6 @@ extension SavedVC:UITableViewDelegate,UITableViewDataSource{
         cell.speedLbl.text = data[indexPath.row].speed
         cell.descLbl.text = data[indexPath.row].desc
         return cell
-        
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

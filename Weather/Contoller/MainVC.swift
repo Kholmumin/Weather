@@ -21,7 +21,7 @@ class MainVC: UIViewController {
     
     var data = [Temp]()
     let appdelegate = UIApplication.shared.delegate as! AppDelegate
-    var context : NSManagedObjectContext!
+    var context: NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +51,7 @@ class MainVC: UIViewController {
         present(alert, animated: true)
     }
     
-    @objc func addTapped(){
+    @objc func rightTapped(){
         let vc = SavedVC(nibName: "SavedVC", bundle: nil)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -61,13 +61,13 @@ class MainVC: UIViewController {
             addWeather()
             alerts(title: "Saved", message: "Data is successfully saved", actionTitle: "Ok", style: .default)
         }else{
-            alerts(title: "Enter city name", message: "Please enter city name", actionTitle: "Ok", style: .default)
+            alerts(title: "Enter city name", message: "Please enter city name", actionTitle: "Cancel", style: .destructive)
         }
     }
     
     func nav(){
         title = "Weather"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(addTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(rightTapped))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(leftTapped))
     }
     
