@@ -29,19 +29,26 @@ class MainVC: UIViewController {
         context = appdelegate.persistentContainer.viewContext
     }
     
+    
+    
+    
     @IBAction func showPressed(_ sender: Any) {
         if let all = citynameTxf.text{
             getWeather(cityName: all)
             if all.isEmpty{
-                let alert = UIAlertController(title: "Please", message: "Please enter city name", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Cancel", style: .destructive)
-                alert.addAction(action)
-                present(alert, animated: true)
+                alerts()
             }
         }
     }
     
     //MARK: Functions
+    
+    func alerts(){
+        let alert = UIAlertController(title: "No city name", message: "Please enter city name", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Cancel", style: .destructive)
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
     
     @objc func addTapped(){
         let vc = SavedVC(nibName: "SavedVC", bundle: nil)
@@ -55,6 +62,8 @@ class MainVC: UIViewController {
             let action = UIAlertAction(title: "Ok", style: .default)
             alert.addAction(action)
             present(alert, animated: true)
+        }else{
+          alerts()
         }
     }
     
