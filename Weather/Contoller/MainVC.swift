@@ -34,18 +34,19 @@ class MainVC: UIViewController {
     
     @IBAction func showPressed(_ sender: Any) {
         if let all = citynameTxf.text{
-            getWeather(cityName: all)
             if all.isEmpty{
-                alerts()
+                alerts(title: "Enter city name", message: "Please enter city name", actionTitle: "Cancel", style: .destructive)
+            }else{
+                getWeather(cityName: all)
             }
         }
     }
     
     //MARK: Functions
     
-    func alerts(){
-        let alert = UIAlertController(title: "No city name", message: "Please enter city name", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Cancel", style: .destructive)
+    func alerts(title:String,message:String,actionTitle:String,style:UIAlertAction.Style){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: actionTitle, style: style)
         alert.addAction(action)
         present(alert, animated: true)
     }
@@ -58,12 +59,9 @@ class MainVC: UIViewController {
     @objc func leftTapped(){
         if !citynameTxf.text!.isEmpty && !nameLbl.text!.isEmpty{
             addWeather()
-            let alert = UIAlertController(title: "Saved", message: "Data is successfully saved", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Ok", style: .default)
-            alert.addAction(action)
-            present(alert, animated: true)
+            alerts(title: "Saved", message: "Data is successfully saved", actionTitle: "Ok", style: .default)
         }else{
-          alerts()
+            alerts(title: "Enter city name", message: "Please enter city name", actionTitle: "Ok", style: .default)
         }
     }
     
@@ -77,29 +75,35 @@ class MainVC: UIViewController {
         loading.startAnimating()
         AF.request("https://api.openweathermap.org/data/2.5/weather", method: .get, parameters: ["q":cityName,"appid":"b07a547eac54a94140f5a62624aa26c4"]).response { response in
             self.loading.stopAnimating()
-            if let data = response.data{
-                let json  = JSON(data)
-                let name  = json["name"].stringValue
-                let desc  = json["weather"][0]["description"].stringValue
-                let speed = json["wind"]["speed"].doubleValue
-                let temp  = json["main"]["temp"].doubleValue
-                
-                self.nameLbl.text  = name
-                self.descLbl.text  = desc
-                
-                if temp != 0{
-                    self.tempLbl.text  = String("\(temp - 255) C")
-                }else{
-                    self.tempLbl.text  = String("")
+            if response.response?.statusCode == 200{
+                if let data = response.data{
+                    let json  = JSON(data)
+                    
+                    let name  = json["name"].stringValue
+                    let desc  = json["weather"][0]["description"].stringValue
+                    let speed = json["wind"]["speed"].doubleValue
+                    let temp  = json["main"]["temp"].doubleValue
+                    
+                    self.nameLbl.text  = name
+                    self.descLbl.text  = desc
+                    
+                    if temp != 0{
+                        self.tempLbl.text  = String("\(temp - 255) C")
+                    }else{
+                        self.tempLbl.text  = String("")
+                    }
+                    if speed != 0{
+                        self.speedLbl.text = String(speed)
+                    }else{
+                        self.speedLbl.text  = String("")
+                    }
+                } else{
+                    print(response.error.debugDescription)
                 }
-                if speed != 0{
-                    self.speedLbl.text = String(speed)
-                }else{
-                    self.speedLbl.text  = String("")
-                }
-            }else{
-                print(response.error.debugDescription)
+            }else if response.response?.statusCode == 404 {
+                self.alerts(title: "Can not found  city name", message: "Please enter  correct city name", actionTitle: "Cancel", style: .destructive)
             }
+           
         }
     }
     
