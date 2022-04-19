@@ -58,7 +58,7 @@ class MainVC: UIViewController {
     @objc func leftTapped(){
         if !citynameTxf.text!.isEmpty && !nameLbl.text!.isEmpty{
             addWeather()
-            let alert = UIAlertController(title: "Saved", message: "Data is successfully added", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Saved", message: "Data is successfully saved", preferredStyle: .alert)
             let action = UIAlertAction(title: "Ok", style: .default)
             alert.addAction(action)
             present(alert, animated: true)
